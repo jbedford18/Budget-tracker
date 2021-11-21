@@ -7,7 +7,7 @@ const request = indexedDB.open('budget_tracker', 1);
 //save ref to db, create table for new transactions
 request.onupgradeneeded = function(event) {
   const db = event.target.result;
-  db.createObjectStore('new_transact', { autoIncrement: true });
+  db.createObjectStore('new_transaction', { autoIncrement: true });
 };
 
 //if succesfull
@@ -17,7 +17,7 @@ request.onsuccess = function(event) {
 
   // check if app is online, if yes run checkDatabase() function to send all local db data to api
   if (navigator.onLine) {
-    uploadTransact();
+    uploadTransaction();
   }
 };
 
@@ -28,20 +28,20 @@ request.onerror = function(event) {
 
 //function for offline saving 
 function saveRecord(record) {
-  const transaction = db.transaction(['new_transact'], 'readwrite');
+  const transaction = db.transaction(['new_transaction'], 'readwrite');
 
-  const transObjectStore = transaction.objectStore('new_transact');
+  const transObjectStore = transaction.objectStore('new_transaction');
 
   // add record to your store with add method.
   transObjectStore.add(record);
 }
 
-function uploadTransact() {
+function uploadTransaction() {
   // open a transaction on your pending db
-  const transaction = db.transaction(['new_transact'], 'readwrite');
+  const transaction = db.transaction(['new_transaction'], 'readwrite');
 
   // access your pending object store
-  const transObjectStore = transaction.objectStore('new_transact');
+  const transObjectStore = transaction.objectStore('new_transaction');
 
   // get all records from store and set to a variable
   const getAll = transObjectStore.getAll();
@@ -63,10 +63,11 @@ function uploadTransact() {
             throw new Error(serverResponse);
           }
 
-          const transaction = db.transaction(['new_transact'], 'readwrite');
-          const transObjectStore = transaction.objectStore('new_transact');
+          const transaction = db.transaction(['new_transaction'], 'readwrite');
+          const transObjectStore = transaction.objectStore('new_transaction');
           // clear all items in your store
           transObjectStore.clear();
+          alert('Your saved transactions have been added.');
         })
         .catch(err => {
           // set reference to redirect back here
@@ -77,4 +78,4 @@ function uploadTransact() {
 }
 
 // listen for app coming back online
-window.addEventListener('online', uploadTransact);
+window.addEventListener('online', uploadTransaction);
