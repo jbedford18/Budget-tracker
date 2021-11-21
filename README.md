@@ -14,3 +14,6 @@ You will need to clone the repo and install dependencies using npm i. Then start
 
 ## Screenshot
 ![alt text](assets/images/budgss.PNG)
+
+## Deployed Heroku Link
+https://whispering-badlands-17410.herokuapp.com/
